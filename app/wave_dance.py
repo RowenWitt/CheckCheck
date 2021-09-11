@@ -1,4 +1,4 @@
-from app.Pipeline.db import db
+from app.Pipeline.db import Database
 from app.Pipeline.models import models
 
 

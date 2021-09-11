@@ -1,7 +1,16 @@
-from app.Pipeline.models import models ## Make sure to switch all imports over when that happens
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
+import json, os
+from typing import Tuple, List, Dict
 
+from sqlalchemy import create_engine, select, insert, update, func, inspect, and_
+from sqlalchemy.orm import sessionmaker, scoped_session
 
+from app.Pipeline.models import SurfLine, Tide, Buoy, Weather, Sat
+ ## Make sure to switch all imports over when that happens
+
+ db_url = os.getenv("DB_URL")
 
 
 # Will need to get data from S3 for training and prediction
@@ -19,10 +28,32 @@ from app.Pipeline.models import models ## Make sure to switch all imports over w
 ### Fourier Fill needs to have a specific application for each required use, BUOY, TIDE, SAT_DAT, SURFLINE
 ### Should somehow weight available neighboring datapoints by temporal distance
 
-## Class DB
+class Database(object):
 
-	# Init function
+	def __init__(self):
+		self.engine = create_engine(
+			db_url,
+			pool_recycle=3600,
+			pool_size=10,
+			echo=False,
+			pool_pre_ping=True
+		)
 
+		self.Sessionmaker = scoped_session(
+			sessionmaker(
+				autoflush=False,
+				autocommit=False,
+				bind=self.engine
+			)
+		)
+
+
+		self.table_names = {
+						"surfline":SurfLine,
+						"tide":Tide,
+						"buoy":Buoy,
+						"weather":Weather,
+						}
 		# Setup S3 connected class
 		# Setup DB connection parameters from .env
 		# Define data model self.WEATHER_schema

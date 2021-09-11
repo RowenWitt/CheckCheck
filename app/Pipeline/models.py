@@ -1,21 +1,30 @@
+from sqlalchemy import Table, Column, Integer, String, Date, Float, Boolean, ForeignKey, UniqueConstraint
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm.relationships import foreign
+from sqlalchemy.sql.sqltypes import ARRAY
+from sqlalchemy.ext.declarative import declarative_base
+from pydantic import BaseModel
+from typing import Optional, Tuple, List, Dict
+
+Base = declarative_base()
 
 
-
-# Surfline data
+class SurfLine(Base):
+	# Surfline data
 
 	# DateTime
 	# Location (Lat, Long)
 	# Forecasted height
 	# ...
 
-
-# Buoy Data
+class Buoy(Base)
+	# Buoy Data
 
 	# Lots of columns, can grab from existing DB
 
 
-
-# Tide data
+class Tide(Base)
+	# Tide data
 
 	# DateTime
 	# Location (Lat, Long)
@@ -23,8 +32,8 @@
 	# Other tide predictions?
 
 
-
-# Weather data
+class Weather(Base)
+	# Weather data
 
 	# DateTime
 	# Location (Lat, Long)
@@ -32,4 +41,5 @@
 	### Use prediction for forward looking, update previous with observed
 
 
-# SAT DATA
+class Sat(Base)
+	# SAT DATA
