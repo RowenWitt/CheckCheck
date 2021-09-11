@@ -1,0 +1,107 @@
+from app.Pipeline.models import models ## Make sure to switch all imports over when that happens
+
+
+
+
+
+# Will need to get data from S3 for training and prediction
+
+# Will need a function to weave together S3 data and DB data to feed to wave_dance
+# Memory will be a concern, build with batching in mind, do some benchmarking to see what batch size is reasonable
+# What is the size of an unpacked grib file in active memory?  Ideally I can package data at least in sets of days... a week would be great
+# A week of GRIB data would be 4 * 7 = 28 GRIB files worth of data, vague recollection says each file is ~7 MBs, 28 * 7 is 196 MBs, maybe half weeks?
+# The size of the data that can be represented will determine the size of the model batches/epochs, I'd like to have the biggest possible epoch
+
+## Because data will be weaved together here and passed directly to the wave_dance file, Fourier Analysis should occur here
+
+### Considering two files, read_DB and write_DB for loaded memory optimization
+
+### Fourier Fill needs to have a specific application for each required use, BUOY, TIDE, SAT_DAT, SURFLINE
+### Should somehow weight available neighboring datapoints by temporal distance
+
+## Class DB
+
+	# Init function
+
+		# Setup S3 connected class
+		# Setup DB connection parameters from .env
+		# Define data model self.WEATHER_schema
+		# Define data model self.BUOY_schema
+		# Define data model self.TIDE_schema
+		# Define data model self.SURFLINE_schema
+		
+
+	# WEATHER functions
+
+		# Call get new data function (list of locations and URLs, data.py) from buoy_tide_weather.py
+
+		# Validate input against self.WEATHER_schema
+
+		# Insert data to WEATHER table
+		# Update data WEATHER table by location and DateTime
+		# Get all data WEATHER table (for past year)
+		# Get all data WEATHER table from location
+		# Get data WEATHER table from specific time range (with default period)
+		# Get data WEATHER table from specific time range for location (with default period)
+
+
+	# BUOY functions
+
+		# Call get new data function (list of locations and URLs, data.py) from buoy_tide_weather.py
+
+		# Validate input against self.BUOY_schema
+
+		# Insert data to BUOY table
+		# Update data BUOY table by buoyID and DateTime
+		# Get all data BUOY table YEAR
+		# Get all data BUOY table from location YEAR
+		# Get data BUOY table from specific time range (with default period)
+		# Get data BUOY table from specific time range for location (with default period)
+
+		# Fourier Fill BUOY data, return FF
+
+
+	# TIDE functions
+
+		# Call get new data function (list of locations and URLs, data.py) from buoy_tide_weather.py
+
+		# Validate input against self.TIDE_schema
+
+		# Insert data to TIDE table
+		# Update data TIDE table by location and DateTime
+		# Get all data TIDE table YEAR
+		# Get all data TIDE table from location YEAR
+		# Get all data TIDE table from specific time range (with default period)
+		# Get all data TIDE table from specific time range for location (with default period)
+
+		# Fourier Fill TIDE data, return FF
+
+	# SURFLINE functions
+
+		# Call get new data function (list of locations and URLs, data.py) from surfline.py
+
+		# Validate input against self.SURFLINE_schema
+
+		# Insert data to SURFLINE table
+		# Update data SURFLINE table by Location and DateTime
+		# Get add data SURFLINE table YEAR
+		# Get all data SURFLINE table from location YEAR
+		# Get all data SURFLINE table from specific time range (with default period)
+		# Get all data SURFLINE table from specific time range for location (with default period)
+
+		# Fourier Fill TIDE data, return FF
+
+
+	# SAT_S3 functions
+
+		# Call get new data function (list of locations and URLs, data.py, build URL possibility) from sat_dat.py
+
+		# Insert data to S3 Bucket (possibilty to rename) from sat_dat.py
+
+		# Get data from S3 Bucket (should be able to deterministically reference files) from sat_dat.py
+
+		# Fourier Fill (cool name right) for given list of GRIB files, return FF
+
+
+
+
