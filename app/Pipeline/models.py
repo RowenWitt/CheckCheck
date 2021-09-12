@@ -18,13 +18,32 @@ class SurfLine(Base):
 	# ...
 
 class Buoy(Base)
-	# Buoy Data
+	# Buoy data
 
-	# Lots of columns, can grab from existing DB
+	__tablename__ = 'tidedata'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    date = Column(DateTime, primary_key=True)
+    wdir = Column(Integer)
+    wspd = Column(Float)
+    gst = Column(Float)
+    wvht = Column(Float)
+    dpd = Column(Integer)
+    apd = Column(Float)
+    mwd = Column(Integer)
+    pres = Column(Float)
+    atmp = Column(Float)
+    wtmp = Column(Float)
+    dewp = Column(String)
+    vis = Column(String)
+    ptdy = Column(String)
+    tide = Column(String)
+
+	# Set up REPR
 
 
 class Tide(Base)
-	# Tide data
+	# Tide data -- not currently used
 
 	__tablename__ = "tidevals"
 
@@ -52,10 +71,6 @@ class Weather(Base)
 	forecast = Column(String)
 
 	# Set up REPR
-
-
-	# DateTime
-	# Location (Lat, Long)
 
 	### Use prediction for forward looking, update previous with observed
 

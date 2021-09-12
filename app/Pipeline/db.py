@@ -64,11 +64,18 @@ class Database(object):
 
 	# WEATHER functions
 
-		# Call get new data function (list of locations and URLs, data.py) from buoy_tide_weather.py
-
 		# Validate input against self.WEATHER_schema
 
-		# Insert data to WEATHER table
+		def insert_weather(data: List[Dict]):
+			"""
+			Insert data to WEATHER table, accepts output of get_weather_update(correct_grid_calls) from buoy_tide_weather.py as input
+			"""
+			with self.Sessionmaker() as session:
+				for obs in data:
+					step = Weather(**obs)
+					session.merge(step)  # May need to go back to old functionality
+				s.commit()
+
 		# Update data WEATHER table by location and DateTime
 		# Get all data WEATHER table (for past year)
 		# Get all data WEATHER table from location

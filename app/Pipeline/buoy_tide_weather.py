@@ -4,7 +4,7 @@ from app.Pipeline.data import tide_station_list, historicInfill, lat_long, buoy_
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
-import json, os, requests, datetime
+import json, os, requests, datetime, time, re
 from typing import Tuple, List, Dict
 
 
@@ -63,8 +63,11 @@ class BTW(object):
 
 	    return bigList
 
+
+
 		def get_updated_buoy_data(input):
 			""" gets updated buoy data for all buoys in tuple (id, lat/long) input """
+			output_list = []
 			for j in input: 
 				a = requests.get('https://www.ndbc.noaa.gov/data/realtime2/{}.txt'.format(j[0])) # remove slice for prod
 				# Data goes back for 45 days
@@ -99,16 +102,48 @@ class BTW(object):
 
 
 
-	   def get_buoy_links() -> List:
-	   	"""
-	   	Gets correct links for nearest buoy to Lat/Long
-	   	"""
-	   	call_list = []
+		def get_buoy_links() -> List:
+			"""
+			Gets correct links for nearest buoy to Lat/Long
+			"""
+			call_list = []
 
-		for a,b in lat_long:
-			first_header = 'https://api.weather.gov/points/{},{}'.format(a, b)
-			first_resp = requests.get(first_header).json()
-			second_header = first_resp['properties']['forecastHourly']
-			call_list.append(second_header)
+			for a,b in lat_long:
+				first_header = 'https://api.weather.gov/points/{},{}'.format(a, b)
+				first_resp = requests.get(first_header).json()
+				second_header = first_resp['properties']['forecastHourly']
+				call_list.append(second_header)
 
-		return call_list
+			return call_list
+
+
+
+		def get_weather_update(calls) -> :
+			output_list = []
+			slumb = 0
+			for j in calls:
+				slumb += 1
+				if slumb % 5 == 0:
+					time.sleep(30)
+				a = requests.get(j[0]).json()
+				try:
+					a = a['properties']['periods']
+					# print(a[0])
+				except KeyError:
+					print(a) # LOG
+					pass
+
+				for i in a:
+					try:
+						bid = j[1]
+						tar = i['startTime'][:i['startTime'].rindex('-')].replace('T', ' ')
+						dt = datetime.datetime.strptime(tar, "%Y-%m-%d %H:%M:%S")
+						te = i['temperature']
+						ws = re.sub("[^0-9]", '', i["windSpeed"])
+						wd = i['windDirection']
+						sf = i['shortForecast']
+						b = {'buoyid':bid, 'starttime':dt, 'temp':te, 'windspeed':ws, 'winddir':wd, 'forecast':sf}
+						output_list.append(b)
+					except (TypeError, KeyError) as e:
+						pass # LOG
+			return output_list
