@@ -85,11 +85,21 @@ class Database(object):
 
 	# BUOY functions
 
+	def insert_buoy(data: List[Dict]):
+		"""
+		Insert data to BUOY table (Currently called 'tidedata')
+		"""
+		with self.Sessionmaker() as session:
+			for obs in data:
+				step = Tide(**obs)
+				session.merge(step)
+			session.commit()
+
 		# Call get new data function (list of locations and URLs, data.py) from buoy_tide_weather.py
 
 		# Validate input against self.BUOY_schema
 
-		# Insert data to BUOY table
+
 		# Update data BUOY table by buoyID and DateTime
 		# Get all data BUOY table YEAR
 		# Get all data BUOY table from location YEAR

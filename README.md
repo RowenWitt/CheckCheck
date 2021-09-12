@@ -1,6 +1,12 @@
 # CheckCheck
 Modeling wave-heights at the beach
 
+Currently there is an EC2 instance grabbing the new data for the database periodically, running on a Cron job.  I wasn't sure where to put the code for that EC2 instance, so it's in a directory called `Chronos` ... Not all the code for the Chronos API can be included because it would mean dumping the whole instance, which would be annoying, so if there's issues raise an issue on the Repo.
+
+## TODO
+
+- Migrate all DBs to new model structure
+
 ## ETL FLOW
 
 - GRIB2 data from NOAA goes to S3 Bucket
