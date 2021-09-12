@@ -3,6 +3,8 @@ Modeling wave-heights at the beach
 
 Currently there is an EC2 instance grabbing the new data for the database periodically, running on a Cron job.  I wasn't sure where to put the code for that EC2 instance, so it's in a directory called `Chronos` ... Not all the code for the Chronos API can be included because it would mean dumping the whole instance, which would be annoying, so if there's issues raise an issue on the Repo.
 
+Most of the update data functions shouldn't be used within this application, all DB updates should be run automatically through `Chronos` and this side of the application should only be pulling down data from the DB & S3 bucket then doing Fourier Imputation then weaving that data together for training or inference.
+
 ## TODO
 
 - Migrate all DBs to new model structure
