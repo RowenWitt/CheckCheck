@@ -6,6 +6,11 @@ from app.Pipeline.fourier import fourier
 # Therefore this file will simply contain the following functions within a class
 
 
+class Satellite(object):
+
+
+	def upload_s3(data):
+		
 
 ## Get files from NOAA
 
