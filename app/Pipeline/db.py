@@ -99,7 +99,9 @@ class Database(object):
 		# Validate input against self.TIDE_schema
 
 		def insert_tide(data: List[Dict]):
-			# Insert data to TIDE table
+			"""
+			Insert data to TIDE table
+			"""
 			processed_data = []
 			for rows in data:
 				entry = {'buoyid':rows[3], 'location':rows[4], 'datetime':rows[0], 'predicted':rows[1], 'highlow':rows[2]}

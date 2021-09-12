@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, Date, Float, Boolean, ForeignKey, UniqueConstraint
+from sqlalchemy import Table, Column, Integer, String, Date, Float, Boolean, ForeignKey, UniqueConstraint, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.relationships import foreign
 from sqlalchemy.sql.sqltypes import ARRAY
@@ -40,6 +40,19 @@ class Tide(Base)
 
 class Weather(Base)
 	# Weather data
+	
+	__tablename__ = "NOAAHourlyForecast"
+
+	id = Column(Integer) ## Need to autoincrement
+	buoy_id = Column(Integer, primary_key=True)
+	starttime = Column(DateTime, primary_key=True)
+	temp = Column(Integer)
+	windspeed = Column(Integer)
+	winddir = Column(String)
+	forecast = Column(String)
+
+	# Set up REPR
+
 
 	# DateTime
 	# Location (Lat, Long)

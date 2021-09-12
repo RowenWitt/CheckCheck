@@ -1,14 +1,11 @@
-from app.Pipeline.data import tide_station_list, historicInfill
+from app.Pipeline.data import tide_station_list, historicInfill, lat_long, buoy_list
 
 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
-import json, os
+import json, os, requests, datetime
 from typing import Tuple, List, Dict
-
-import requests
-
 
 
 
@@ -16,21 +13,12 @@ import requests
 class BTW(object):
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	def fix_nulls(str) -> str:
+		"""
+		Fixes nulls to be -1 instead of string
+		"""
+		if type(data) == str:
+			return data.replace('MM','-1')
 
 
 
@@ -52,6 +40,7 @@ class BTW(object):
 	    station_list_keys = list(tide_station_list.keys())
 	    station_list_values = list(tide_station_list.values())
 	    bigList = []
+
 	    for j in range(len(station_list_keys)):
 	        id = station_list_values[j]
 	        idName = station_list_keys[j]
@@ -73,3 +62,53 @@ class BTW(object):
 	                time.sleep(45)
 
 	    return bigList
+
+		def get_updated_buoy_data(input):
+			""" gets updated buoy data for all buoys in tuple (id, lat/long) input """
+			for j in input: 
+				a = requests.get('https://www.ndbc.noaa.gov/data/realtime2/{}.txt'.format(j[0])) # remove slice for prod
+				# Data goes back for 45 days
+				b = a.text.split('\n')
+				c = [" ".join(re.split(r'\s+', i)) for i in b]
+				d = [i.split() for i in c]
+				d = d[2:-1]
+				h = []
+				try:
+					for i in d:
+						dt= i[0]+'/'+i[1]+'/'+i[2]+' '+i[3]+':'+i[4]+':'+'00'
+						dt = datetime.datetime.strptime(dt, '%Y/%m/%d %H:%M:%S')
+						wdir = self.fix_nulls(i[5])
+						wspd = self.fix_nulls(i[6])
+						gst = self.fix_nulls(i[7])
+						wvht = self.fix_nulls(i[8])
+						dpd = self.fix_nulls(i[9])
+						apd = self.fix_nulls(i[10])
+						mwd = self.fix_nulls(i[11])
+						pres = self.fix_nulls(i[12])
+						atmp = self.fix_nulls(i[13])
+						wtmp = self.fix_nulls(i[14])
+						dewp = self.fix_nulls(i[15])
+						vis = i[16]
+						ptdy = i[17]
+						tide = i[18]
+						b = {'date':dt, 'wdir':wdir, 'wspd':wspd, 'gst':gst, 'wvht':wvht, 'dpd':dpd, 'apd':apd, 'mwd':mwd, 'pres':pres, 'atmp':atmp, 'wtmp':wtmp, 'dewp':dewp, 'vis':vis, 'ptdy':ptdy, 'tide':tide}
+						output_list.append(b)
+				except IndexError:
+						pass
+			return output_list
+
+
+
+	   def get_buoy_links() -> List:
+	   	"""
+	   	Gets correct links for nearest buoy to Lat/Long
+	   	"""
+	   	call_list = []
+
+		for a,b in lat_long:
+			first_header = 'https://api.weather.gov/points/{},{}'.format(a, b)
+			first_resp = requests.get(first_header).json()
+			second_header = first_resp['properties']['forecastHourly']
+			call_list.append(second_header)
+
+		return call_list
