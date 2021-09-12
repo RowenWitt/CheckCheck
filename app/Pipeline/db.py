@@ -90,8 +90,14 @@ class Database(object):
 		Insert data to BUOY table (Currently called 'tidedata')
 		"""
 		with self.Sessionmaker() as session:
-			for obs in data:
-				step = Tide(**obs)
+            last = select(func.max(Tide.id))
+            last_value = session.execute(last).fetchall()[0][0]
+            for i in range(len(data)):
+                if last_value is None:
+                    last_value = 0
+                last_value += 1
+                data[i]['id'] = last_value
+				step = Tide(**data[i])
 				session.merge(step)
 			session.commit()
 

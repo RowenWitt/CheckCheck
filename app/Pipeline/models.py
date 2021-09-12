@@ -64,7 +64,7 @@ class Weather(Base):
 	__tablename__ = "noaa_hourly_forecast"
 
 	id = Column(Integer, unique=True, autoincrement=True) ## Need to autoincrement
-	buoy_id = Column(Integer, primary_key=True)
+	buoyid = Column(Integer, primary_key=True)
 	starttime = Column(DateTime, primary_key=True)
 	temp = Column(Integer)
 	windspeed = Column(Integer)
