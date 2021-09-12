@@ -9,20 +9,21 @@ from typing import Optional, Tuple, List, Dict
 Base = declarative_base()
 
 
-class SurfLine(Base):
-	# Surfline data
+# class SurfLine(Base):
+# 	# Surfline data
 
-	# DateTime
-	# Location (Lat, Long)
-	# Forecasted height
-	# ...
+# 	# DateTime
+# 	# Location (Lat, Long)
+# 	# Forecasted height
+# 	# ...
 
-class Buoy(Base)
+class Buoy(Base):
 	# Buoy data
 
-	__tablename__ = 'tidedata'
+	__tablename__ = 'buoy_data'
 
-	id = Column(Integer, primary_key=True, autoincrement=True)
+	id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
+	buoy_id = Column(Integer)
 	date = Column(DateTime, primary_key=True)
 	wdir = Column(Integer)
 	wspd = Column(Float)
@@ -42,12 +43,12 @@ class Buoy(Base)
 	# Set up REPR
 
 
-class Tide(Base)
+class Tide(Base):
 	# Tide data -- not currently used
 
-	__tablename__ = "tidevals"
+	__tablename__ = "tide_vals"
 
-	id = Column(Integer, primary_key=True, unique=True)
+	id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
 	buoy_id = Column(Integer, nullable=False)
 	location = Column(String(50), nullable=False)
 	datetime = Column(Date, nullable=False)
@@ -57,12 +58,12 @@ class Tide(Base)
 	# Set up REPR
 
 
-class Weather(Base)
+class Weather(Base):
 	# Weather data
 	
-	__tablename__ = "NOAAHourlyForecast"
+	__tablename__ = "noaa_hourly_forecast"
 
-	id = Column(Integer) ## Need to autoincrement
+	id = Column(Integer, unique=True, autoincrement=True) ## Need to autoincrement
 	buoy_id = Column(Integer, primary_key=True)
 	starttime = Column(DateTime, primary_key=True)
 	temp = Column(Integer)
@@ -75,5 +76,6 @@ class Weather(Base)
 	### Use prediction for forward looking, update previous with observed
 
 
-class Sat(Base)
-	# SAT DATA
+# class Sat(Base)
+# 	# SAT DATA
+# 	pass

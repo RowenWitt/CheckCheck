@@ -78,6 +78,7 @@ class BTW(object):
 				h = []
 				try:
 					for i in d:
+						bid = j[0]
 						dt= i[0]+'/'+i[1]+'/'+i[2]+' '+i[3]+':'+i[4]+':'+'00'
 						dt = datetime.datetime.strptime(dt, '%Y/%m/%d %H:%M:%S')
 						wdir = self.fix_nulls(i[5])
@@ -94,7 +95,7 @@ class BTW(object):
 						vis = i[16]
 						ptdy = i[17]
 						tide = i[18]
-						b = {'date':dt, 'wdir':wdir, 'wspd':wspd, 'gst':gst, 'wvht':wvht, 'dpd':dpd, 'apd':apd, 'mwd':mwd, 'pres':pres, 'atmp':atmp, 'wtmp':wtmp, 'dewp':dewp, 'vis':vis, 'ptdy':ptdy, 'tide':tide}
+						b = {'buoy_id':bid, 'date':dt, 'wdir':wdir, 'wspd':wspd, 'gst':gst, 'wvht':wvht, 'dpd':dpd, 'apd':apd, 'mwd':mwd, 'pres':pres, 'atmp':atmp, 'wtmp':wtmp, 'dewp':dewp, 'vis':vis, 'ptdy':ptdy, 'tide':tide}
 						output_list.append(b)
 				except IndexError:
 						pass

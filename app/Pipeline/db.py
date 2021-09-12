@@ -66,15 +66,15 @@ class Database(object):
 
 		# Validate input against self.WEATHER_schema
 
-		def insert_weather(data: List[Dict]):
-			"""
-			Insert data to WEATHER table, accepts output of get_weather_update(correct_grid_calls) from buoy_tide_weather.py as input
-			"""
-			with self.Sessionmaker() as session:
-				for obs in data:
-					step = Weather(**obs)
-					session.merge(step)  # May need to go back to old functionality
-				s.commit()
+	def insert_weather(self, data: List[Dict]):
+		"""
+		Insert data to WEATHER table, accepts output of get_weather_update(correct_grid_calls) from buoy_tide_weather.py as input
+		"""
+		with self.Sessionmaker() as session:
+			for obs in data:
+				step = Weather(**obs)
+				session.merge(step)  # May need to go back to old functionality
+			s.commit()
 
 		# Update data WEATHER table by location and DateTime
 		# Get all data WEATHER table (for past year)
@@ -85,7 +85,7 @@ class Database(object):
 
 	# BUOY functions
 
-	def insert_buoy(data: List[Dict]):
+	def insert_buoy(self, data: List[Dict]):
 		"""
 		Insert data to BUOY table (Currently called 'tidedata')
 		"""
@@ -115,20 +115,20 @@ class Database(object):
 
 		# Validate input against self.TIDE_schema
 
-		def insert_tide(data: List[Dict]):
-			"""
-			Insert data to TIDE table
-			"""
-			processed_data = []
-			for rows in data:
-				entry = {'buoyid':rows[3], 'location':rows[4], 'datetime':rows[0], 'predicted':rows[1], 'highlow':rows[2]}
-				processed_data.append(entry)
+	def insert_tide(self, data: List[Dict]):
+		"""
+		Insert data to TIDE table
+		"""
+		processed_data = []
+		for rows in data:
+			entry = {'buoyid':rows[3], 'location':rows[4], 'datetime':rows[0], 'predicted':rows[1], 'highlow':rows[2]}
+			processed_data.append(entry)
 
-			with self.Sessionmaker() as session:
-				for datum in processed_data:
-					obj = Tide(**datum)
-					session.add(obj)
-					session.commit()
+		with self.Sessionmaker() as session:
+			for datum in processed_data:
+				obj = Tide(**datum)
+				session.add(obj)
+				session.commit()
 
 		# Update data TIDE table by location and DateTime
 		# Get all data TIDE table YEAR
@@ -163,6 +163,35 @@ class Database(object):
 		# Get data from S3 Bucket (should be able to deterministically reference files) from sat_dat.py
 
 		# Fourier Fill (cool name right) for given list of GRIB files, return FF
+
+
+	def initialize_buoy(self):
+		""" creates table `buoy_data` if not exists """
+
+		insp = inspect(self.engine)
+		if insp.has_table('buoy_data') == False:
+			Buoy.__table__.create(self.engine)
+		else:
+			pass # LOG
+
+
+	def initialize_tide(self):
+		""" creates table `tide_vals` if not exists """
+
+		insp = inspect(self.engine)
+		if insp.has_table('tide_vals') == False:
+			Tide.__table__.create(self.engine)
+		else:
+			pass # LOG
+
+	def initialize_weather(self):
+		""" creates table `noaa_hourly_forecast` if not exists """
+
+		insp = inspect(self.engine)
+		if insp.has_table('noaa_hourly_forecast') == False:
+			Weather.__table__.create(self.engine)
+		else:
+			pass # LOG
 
 
 
