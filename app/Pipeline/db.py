@@ -98,7 +98,19 @@ class Database(object):
 
 		# Validate input against self.TIDE_schema
 
-		# Insert data to TIDE table
+		def insert_tide(data: List[Dict]):
+			# Insert data to TIDE table
+			processed_data = []
+			for rows in data:
+				entry = {'buoyid':rows[3], 'location':rows[4], 'datetime':rows[0], 'predicted':rows[1], 'highlow':rows[2]}
+				processed_data.append(entry)
+
+			with self.Sessionmaker() as session:
+				for datum in processed_data:
+					obj = Tide(**datum)
+					session.add(obj)
+					session.commit()
+
 		# Update data TIDE table by location and DateTime
 		# Get all data TIDE table YEAR
 		# Get all data TIDE table from location YEAR

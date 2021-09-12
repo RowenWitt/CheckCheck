@@ -26,10 +26,16 @@ class Buoy(Base)
 class Tide(Base)
 	# Tide data
 
-	# DateTime
-	# Location (Lat, Long)
-	# Predicted tide by NOAA
-	# Other tide predictions?
+	__tablename__ = "tidevals"
+
+	id = Column(Integer, primary_key=True, unique=True)
+	buoy_id = Column(Integer, nullable=False)
+	location = Column(String(50), nullable=False)
+	datetime = Column(Date, nullable=False)
+	predicted = Column(Float, nullable=False)
+	highlow = Column(String(2), nullable=False)
+
+	# Set up REPR
 
 
 class Weather(Base)
