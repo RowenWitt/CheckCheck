@@ -7,7 +7,11 @@ Most of the update data functions shouldn't be used within this application, all
 
 ## TODO
 
-- Migrate all DBs to new model structure
+- Find best satellite data source (NOAA has a lot of nulls)
+- Set up GRIB -> S3 Pipeline
+- Set up Fourier Imputation
+- Set up Tensor Weaver
+- Build Model
 
 ## ETL FLOW
 
