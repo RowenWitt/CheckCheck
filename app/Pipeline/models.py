@@ -18,62 +18,62 @@ Base = declarative_base()
 # 	# ...
 
 class Buoy(Base):
-	# Buoy data
+    # Buoy data
 
-	__tablename__ = 'buoy_data'
+    __tablename__ = 'buoy_data'
 
-	id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-	buoy_id = Column(Integer)
-	date = Column(DateTime, primary_key=True)
-	wdir = Column(Integer)
-	wspd = Column(Float)
-	gst = Column(Float)
-	wvht = Column(Float)
-	dpd = Column(Integer)
-	apd = Column(Float)
-	mwd = Column(Integer)
-	pres = Column(Float)
-	atmp = Column(Float)
-	wtmp = Column(Float)
-	dewp = Column(String)
-	vis = Column(String)
-	ptdy = Column(String)
-	tide = Column(String)
+    id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
+    buoy_id = Column(Integer)
+    date = Column(DateTime, primary_key=True)
+    wdir = Column(Integer)
+    wspd = Column(Float)
+    gst = Column(Float)
+    wvht = Column(Float)
+    dpd = Column(Integer)
+    apd = Column(Float)
+    mwd = Column(Integer)
+    pres = Column(Float)
+    atmp = Column(Float)
+    wtmp = Column(Float)
+    dewp = Column(String)
+    vis = Column(String)
+    ptdy = Column(String)
+    tide = Column(String)
 
-	# Set up REPR
+    # Set up REPR
 
 
 class Tide(Base):
-	# Tide data -- not currently used
+    # Tide data -- not currently used
 
-	__tablename__ = "tide_vals"
+    __tablename__ = "tide_vals"
 
-	id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-	buoy_id = Column(Integer, nullable=False)
-	location = Column(String(50), nullable=False)
-	datetime = Column(Date, nullable=False)
-	predicted = Column(Float, nullable=False)
-	highlow = Column(String(2), nullable=False)
+    id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
+    buoy_id = Column(Integer, nullable=False)
+    location = Column(String(50), nullable=False)
+    datetime = Column(Date, nullable=False)
+    predicted = Column(Float, nullable=False)
+    highlow = Column(String(2), nullable=False)
 
-	# Set up REPR
+    # Set up REPR
 
 
 class Weather(Base):
-	# Weather data
-	
-	__tablename__ = "noaa_hourly_forecast"
+    # Weather data
 
-	id = Column(Integer, unique=True, autoincrement=True) ## Need to autoincrement
-	buoyid = Column(Integer, primary_key=True)
-	starttime = Column(DateTime, primary_key=True)
-	temp = Column(Integer)
-	windspeed = Column(Integer)
-	winddir = Column(String)
-	forecast = Column(String)
+    __tablename__ = "noaa_hourly_forecast"
 
-	# Set up REPR
+    id = Column(Integer, unique=True, autoincrement=True)
+    buoyid = Column(Integer, primary_key=True)
+    starttime = Column(DateTime, primary_key=True)
+    temp = Column(Integer)
+    windspeed = Column(Integer)
+    winddir = Column(String)
+    forecast = Column(String)
 
-	### Use prediction for forward looking, update previous with observed
+    # Set up REPR
+
+    # Use prediction for forward looking, update previous with observed
 
 
 # class Sat(Base)
