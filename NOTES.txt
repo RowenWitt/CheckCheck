@@ -1,0 +1,41 @@
+# New Wave Tracking System
+
+--- ETL Pipes ---
+1 - NOAA Weather (Cell-based sectors)
+2 - NOAA Buoys (Individual buoys)
+3 - NOAA Tide (Individual Areas)
+3 - Satellite Data (GRIB2)
+4 - Surfline (API For each individual spot)
+
+-- Preprocessing Steps ---
+a - Fourier upsampling (GRIB2)
+b - Tide upsampling (NOAA)
+c - Data combination
+	temporary -- Should all be rolled into one giant tensor.  [-1] dimension is for Buoy data. [-2] dimension is for tide data.  [-3] dimension is for weather data.  [:-3] for all satellite data.
+
+
+
+
+**** ISSUES *****
+
+- Inference Step
+	Inference will be based on geographic key and time of prediction, geographic key is feeling like arcGIS.  Hopefully surfline data will train model about swell directions and coastal features.  If not, 'receptive-direction' of beach will need to be additional data point for prediction.
+
+- Satellite selection
+	Still need to pick a satellite and stick with it
+
+- Physical Localization
+	Each service uses a different location-granularity.  This will need to be reconciled either through a granular data-storage system (arcGIS) or a high-level abstraction (Swell-Zones)
+
+- Temporal Localization:
+	Many of the data points only show up n times a day, predicting intermediate values will be crucial to success (Fourier filling)
+
+- ETL Update frequency:
+	What's the schedule to grab new data, schedule to update existing data
+
+- Data Storage: 
+	I can expect to be grabbing up to 2 gigs of new data a day, S3 buckets for GRIB files and two databases (2 tables??) a hot and cold table.  Hot table holds last 3 days of data, cold table holds last 2 weeks of data, data older than that gets saved in 1 day increments in S3 bucket
+
+- Time Zone:
+	UTC for everything, locally convert after the fact
+	

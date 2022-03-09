@@ -1,4 +1,4 @@
-from app.Pipeline.fourier import fourier
+# from app.Pipeline.fourier import Fourier
 from app.Pipeline.data import times
 import json
 import os
@@ -6,7 +6,9 @@ import requests
 import datetime
 import time
 import re
+import numpy as np
 from datetime import date
+from netCDF4 import Dataset
 from typing import Tuple, List, Dict
 
 
@@ -54,6 +56,45 @@ class Satellite(object):
         function to upload file to S3 bucket using Boto3
         """
         pass
+
+    def build_tensor(self, url):
+        '''takes netCDF4 url and converts into a tensor'''
+        to_avoid = {'time', 'lat', 'lon'}
+        ds = Dataset(url)
+        total_timesteps = len(ds.variables['time'])
+        outset = []
+        
+        dims = {}
+        for key in ds.dimensions.keys():
+            dims[key] = ds.dimensions[key].size
+        
+        variables = {}
+        for num, value in enumerate(ds.variables.keys()):
+            variables[num] = value
+            
+        c = 0
+        for time in range(dims['time']): # time
+            timestep = []
+            for variable in variables:
+                c += 1
+                if variables[variable] in to_avoid:
+                    if variables[variable] == 'time':
+                        print("Starting timestep {}/{}.  SubIter {} of {}.".format(time+1, total_timesteps,c ,((len(variables) - 1) * total_timesteps)))
+                        if (time + 1) % 20 == 0:
+                            ds = Dataset(url)
+                            print('refreshing connection')
+                        continue
+                    else:
+                        continue
+                else:
+                    var_data = []
+                    foc = ds[variables[variable]][time] # variable
+                    timestep.append(foc.data)
+            outset.append(timestep)
+        
+        outset = np.array(outset)
+        outset[outest >= 9.999000260554009e+20] = 0
+        return outset
 
 # Get files from NOAA
 
